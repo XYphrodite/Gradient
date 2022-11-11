@@ -36,25 +36,22 @@ def grad(x, n):
 
 
 def conj_grad(e, x, n):
-    xt = x
     k = 0
     h = 1
-    gradvect = grad(xt, n)
+    gradvect = grad(x, n)
     while (pow(gradvect[0] + gradvect[1], 2) > e):
-        xt = [xt[0] - h * gradvect[0], xt[1] - h * gradvect[1]]
-        gradvect = grad(xt, n)
+        x = [x[0] - h * gradvect[0], x[1] - h * gradvect[1]]
+        gradvect = grad(x, n)
         k += 1
-    return xt, k
+    return x, k
 
 
-def gradient_steepest(e, xt, n):
-    x = xt
-
-    def f_x1h(x1, x2, gradx1):
+def gradient_steepest(e, x, n):
+    def Find_x1h(x1, x2, gradX1):
         y = foo(x1, x2, n)
         h = 0
         while (True):
-            yh = foo(x1 - (h + e) * gradx1, x2, n)
+            yh = foo(x1 - (h + e) * gradX1, x2, n)
             if (yh < y):
                 y = yh
                 h += e
@@ -62,11 +59,11 @@ def gradient_steepest(e, xt, n):
                 break
         return h
 
-    def f_x2h(x1, x2, gradx2):
+    def Find_x2h(x1, x2, gradX2):
         y = foo(x1, x2, n)
         h = 0
         while (True):
-            yh = foo(x1, x2 - (h + e) * gradx2, n)
+            yh = foo(x1, x2 - (h + e) * gradX2, n)
             if (yh < y):
                 y = yh
                 h += e
@@ -77,17 +74,17 @@ def gradient_steepest(e, xt, n):
     N = 0
     gradvect = grad(x, n)
     while (pow(gradvect[0] + gradvect[1], 2) > e):
-        x1h = f_x1h(x[0], x[1], gradvect[0])
-        x2h = f_x2h(x[0], x[1], gradvect[1])
+        x1h = Find_x1h(x[0], x[1], gradvect[0])
+        x2h = Find_x2h(x[0], x[1], gradvect[1])
         x = [x[0] - x1h * gradvect[0], x[1] - x2h * gradvect[1]]
-        gradvect = grad(x,n)
-        N+=1
+        gradvect = grad(x, n)
+        N += 1
     return x, N
 
 
 x = [10, 10]
 xG, N1 = conj_grad(dlt / 500, x, 0)
-xD, N2 = gradient_steepest(dlt/5, x, 0)
+xD, N2 = gradient_steepest(dlt / 5, x, 0)
 # xG1, N11 = conj_grad(dlt / 42, x, 1)
 # xD1, N21 = gradient_steepest(dlt / 42, x, 1)
 print("Gradient solution: ", xG)
@@ -100,7 +97,7 @@ print("Iterations: ", N2)
 # print("Steepest gradient solution: ", xD1)
 # print("Iterations: ", N21)
 
-fig, ( ax2) = plt.subplots(1, 1)
+fig, (ax2) = plt.subplots(1, 1)
 
 levels = [-1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.10, -0.05, -0.01, 0.0, 0.01, 0.05, 0.10, 0.20, 0.30,
           0.4,
@@ -114,11 +111,11 @@ conta = ax2.contour(xa1, xa2, ya, levels=levels)
 ax2.plot(xG[0], xG[1], color="red", marker=".")
 ax2.plot(xD[0], xD[1], color="blue", marker=".")
 
-#xb1 = np.arange(-27, 28, 0.125)
-#xb2 = np.arange(-24, 26, 0.125)
-#xb1, xb2 = np.meshgrid(xb1, xb2)
-#f2b = np.vectorize(fooB)
-#yb = f2b(xb1, xb2)
+# xb1 = np.arange(-27, 28, 0.125)
+# xb2 = np.arange(-24, 26, 0.125)
+# xb1, xb2 = np.meshgrid(xb1, xb2)
+# f2b = np.vectorize(fooB)
+# yb = f2b(xb1, xb2)
 # contb = ax1.contour(xb1, xb2, yb, levels=10)
 # ax1.plot(xG1[0], xG1[1], color="pink", marker=".")
 # ax1.plot(xD1[0], xD1[1], color="blue", marker=".")
