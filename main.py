@@ -26,32 +26,36 @@ def foo(x1, x2, n=0):
     else:
         return fooB(x[0], x[1])
 
-
+# вектор градиента
 def grad(x, n):
-    # gradient vector
+    # приращение
     h = 0.0001
     x1 = x[0]
     x2 = x[1]
-    return [(foo(x1 + h, x2, n) - foo(x1 - h, x2, n)) / (h * 2), (foo(x1, x2 + h, n) - foo(x1, x2 - h, n)) / (h * 2)]
+    # производная
+    y1 = (foo(x1 + h, x2, n) - foo(x1 - h, x2, n)) / (h * 2)
+    y2 = (foo(x1, x2 + h, n) - foo(x1, x2 - h, n)) / (h * 2)
+    return [y1, y2]
 
 
-def conj_grad(e, x, n):
-    k = 0
+def gradient(e, x, n):
+    Iterations = 0
     h = 1
-    gradvect = grad(x, n)
-    while (pow(gradvect[0] + gradvect[1], 2) > e):
-        x = [x[0] - h * gradvect[0], x[1] - h * gradvect[1]]
-        gradvect = grad(x, n)
-        k += 1
-    return x, k
+    gradient_vector = grad(x, n)
+    while (pow(gradient_vector[0] + gradient_vector[1], 2) > e):
+        x = [x[0] - h * gradient_vector[0], x[1] - h * gradient_vector[1]]
+        gradient_vector = grad(x, n)
+        Iterations += 1
+    return x, Iterations
 
 
-def gradient_steepest(e, x, n):
-    def Find_x1h(x1, x2, gradX1):
-        y = foo(x1, x2, n)
+def down(e, x, n):
+    # поиск приращения для x1
+    def Find_x1h(x, gradintVector1):
+        y = foo(x[0],x[1], n)
         h = 0
-        while (True):
-            yh = foo(x1 - (h + e) * gradX1, x2, n)
+        while True:
+            yh = foo(x[0] - (h + e) * gradintVector1, x[1], n)
             if (yh < y):
                 y = yh
                 h += e
@@ -59,38 +63,39 @@ def gradient_steepest(e, x, n):
                 break
         return h
 
-    def Find_x2h(x1, x2, gradX2):
-        y = foo(x1, x2, n)
+    # поиск приращения для x2
+    def Find_x2h(x, gradientVector2):
+        y = foo(x[0], x[1], n)
         h = 0
-        while (True):
-            yh = foo(x1, x2 - (h + e) * gradX2, n)
-            if (yh < y):
+        while True:
+            yh = foo(x[0], x[1] - (h + e) * gradientVector2, n)
+            if yh < y:
                 y = yh
                 h += e
             else:
                 break
         return h
 
-    N = 0
-    gradvect = grad(x, n)
-    while (pow(gradvect[0] + gradvect[1], 2) > e):
-        x1h = Find_x1h(x[0], x[1], gradvect[0])
-        x2h = Find_x2h(x[0], x[1], gradvect[1])
-        x = [x[0] - x1h * gradvect[0], x[1] - x2h * gradvect[1]]
-        gradvect = grad(x, n)
-        N += 1
-    return x, N
+    Iterations = 0
+    gradient_vector = grad(x, n)
+    while (pow(gradient_vector[0] + gradient_vector[1], 2) > e):
+        x1h = Find_x1h(x, gradient_vector[0])
+        x2h = Find_x2h(x, gradient_vector[1])
+        x = [x[0] - x1h * gradient_vector[0], x[1] - x2h * gradient_vector[1]]
+        gradient_vector = grad(x, n)
+        Iterations += 1
+    return x, Iterations
 
 
 x = [10, 10]
-xG, N1 = conj_grad(dlt / 500, x, 0)
-xD, N2 = gradient_steepest(dlt / 5, x, 0)
+xG, N1 = gradient(dlt / 500, x, 0)
+xD, N2 = down(dlt / 5, x, 0)
 # xG1, N11 = conj_grad(dlt / 42, x, 1)
 # xD1, N21 = gradient_steepest(dlt / 42, x, 1)
-print("Gradient solution: ", xG)
-print("Iterations: ", N1)
-print("Steepest gradient solution: ", xD)
-print("Iterations: ", N2)
+print("Градиент: ", xG)
+print("Количество шагов: ", N1)
+print("Метод наискорейшего спуска: ", xD)
+print("Количество шагов: ", N2)
 
 # print("Gradient solution: ", xG1)
 # print("Iterations: ", N11)
