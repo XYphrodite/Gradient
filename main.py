@@ -95,8 +95,8 @@ def down(e, x, n):
 x = [10, 10]
 xG, N1 = gradient(dlt/500, x, 0)
 xD, N2 = down(dlt / 5, x, 0)
-xG1, N11 = conj_grad(dlt / 42, x, 1)
-xD1, N21 = gradient_steepest(dlt / 42, x, 1)
+xG1, N11 = gradient(dlt / 42, x, 1)
+xD1, N21 = down(dlt / 42, x, 1)
 print("Градиент: ", xG)
 print("Количество шагов: ", N1)
 print("Метод наискорейшего спуска: ", xD)
@@ -107,7 +107,7 @@ print("Iterations: ", N11)
 print("Steepest gradient solution: ", xD1)
 print("Iterations: ", N21)
 
-fig, (ax2) = plt.subplots(1, 1)
+fig, (ax2) = plt.subplots(1, 2)
 
 levels = [-1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.10, -0.05, -0.01, 0.0, 0.01, 0.05, 0.10, 0.20, 0.30,
           0.4,
