@@ -26,13 +26,14 @@ def foo(x1, x2, n=0):
     else:
         return fooB(x[0], x[1])
 
+
 # вектор градиента
 def grad(x, n):
-    # приращение
+    # h — приращение
     h = 0.0001
     x1 = x[0]
     x2 = x[1]
-    # производная
+    # поиск производной
     y1 = (foo(x1 + h, x2, n) - foo(x1 - h, x2, n)) / (h * 2)
     y2 = (foo(x1, x2 + h, n) - foo(x1, x2 - h, n)) / (h * 2)
     return [y1, y2]
@@ -40,7 +41,7 @@ def grad(x, n):
 
 def gradient(e, x, n):
     Iterations = 0
-    h = 1
+    h = 0.01
     gradient_vector = grad(x, n)
     while (pow(gradient_vector[0] + gradient_vector[1], 2) > e):
         x = [x[0] - h * gradient_vector[0], x[1] - h * gradient_vector[1]]
@@ -51,15 +52,17 @@ def gradient(e, x, n):
 
 def down(e, x, n):
     # поиск приращения для x1
-    def Find_x1h(x, gradintVector1):
-        y = foo(x[0],x[1], n)
+    def Find_x1h(x, gradientVector1):
+        y = foo(x[0], x[1], n)
         h = 0
         while True:
-            yh = foo(x[0] - (h + e) * gradintVector1, x[1], n)
+            h += e
+            yh = foo(x[0] - h * gradientVector1, x[1], n)
             if (yh < y):
                 y = yh
                 h += e
             else:
+                h -= e
                 break
         return h
 
@@ -68,11 +71,13 @@ def down(e, x, n):
         y = foo(x[0], x[1], n)
         h = 0
         while True:
-            yh = foo(x[0], x[1] - (h + e) * gradientVector2, n)
+            h += e
+            yh = foo(x[0], x[1] - h * gradientVector2, n)
             if yh < y:
                 y = yh
                 h += e
             else:
+                h -= e
                 break
         return h
 
@@ -88,19 +93,19 @@ def down(e, x, n):
 
 
 x = [10, 10]
-xG, N1 = gradient(dlt / 500, x, 0)
+xG, N1 = gradient(dlt/500, x, 0)
 xD, N2 = down(dlt / 5, x, 0)
-# xG1, N11 = conj_grad(dlt / 42, x, 1)
-# xD1, N21 = gradient_steepest(dlt / 42, x, 1)
+xG1, N11 = conj_grad(dlt / 42, x, 1)
+xD1, N21 = gradient_steepest(dlt / 42, x, 1)
 print("Градиент: ", xG)
 print("Количество шагов: ", N1)
 print("Метод наискорейшего спуска: ", xD)
 print("Количество шагов: ", N2)
 
-# print("Gradient solution: ", xG1)
-# print("Iterations: ", N11)
-# print("Steepest gradient solution: ", xD1)
-# print("Iterations: ", N21)
+print("Gradient solution: ", xG1)
+print("Iterations: ", N11)
+print("Steepest gradient solution: ", xD1)
+print("Iterations: ", N21)
 
 fig, (ax2) = plt.subplots(1, 1)
 
@@ -116,12 +121,12 @@ conta = ax2.contour(xa1, xa2, ya, levels=levels)
 ax2.plot(xG[0], xG[1], color="red", marker=".")
 ax2.plot(xD[0], xD[1], color="blue", marker=".")
 
-# xb1 = np.arange(-27, 28, 0.125)
-# xb2 = np.arange(-24, 26, 0.125)
-# xb1, xb2 = np.meshgrid(xb1, xb2)
-# f2b = np.vectorize(fooB)
-# yb = f2b(xb1, xb2)
-# contb = ax1.contour(xb1, xb2, yb, levels=10)
-# ax1.plot(xG1[0], xG1[1], color="pink", marker=".")
-# ax1.plot(xD1[0], xD1[1], color="blue", marker=".")
+xb1 = np.arange(-27, 28, 0.125)
+xb2 = np.arange(-24, 26, 0.125)
+xb1, xb2 = np.meshgrid(xb1, xb2)
+f2b = np.vectorize(fooB)
+yb = f2b(xb1, xb2)
+contb = ax1.contour(xb1, xb2, yb, levels=10)
+ax1.plot(xG1[0], xG1[1], color="pink", marker=".")
+ax1.plot(xD1[0], xD1[1], color="blue", marker=".")
 plt.show()
