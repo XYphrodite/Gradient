@@ -93,7 +93,7 @@ def down(e, x, n):
 
 
 x = [10, 10]
-xG, N1 = gradient(dlt/500, x, 0)
+xG, N1 = gradient(dlt/5500, x, 0)
 xD, N2 = down(dlt / 5, x, 0)
 xG1, N11 = gradient(dlt / 42, x, 1)
 xD1, N21 = down(dlt / 42, x, 1)
@@ -107,7 +107,7 @@ print("Iterations: ", N11)
 print("Steepest gradient solution: ", xD1)
 print("Iterations: ", N21)
 
-fig, (ax2) = plt.subplots(1, 2)
+fig, (ax2) = plt.subplots(1, 1)
 
 levels = [-1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.10, -0.05, -0.01, 0.0, 0.01, 0.05, 0.10, 0.20, 0.30,
           0.4,
@@ -120,7 +120,7 @@ ya = f2(xa1, xa2)
 conta = ax2.contour(xa1, xa2, ya, levels=levels)
 ax2.plot(xG[0], xG[1], color="red", marker=".")
 ax2.plot(xD[0], xD[1], color="blue", marker=".")
-
+"""
 xb1 = np.arange(-27, 28, 0.125)
 xb2 = np.arange(-24, 26, 0.125)
 xb1, xb2 = np.meshgrid(xb1, xb2)
@@ -129,4 +129,5 @@ yb = f2b(xb1, xb2)
 contb = ax1.contour(xb1, xb2, yb, levels=10)
 ax1.plot(xG1[0], xG1[1], color="pink", marker=".")
 ax1.plot(xD1[0], xD1[1], color="blue", marker=".")
+"""
 plt.show()
