@@ -43,7 +43,7 @@ def grad(x, n):
 
 def gradient(e, x, n):
     Iterations = 0
-    h = 1
+    h = 2
     gradient_vector = grad(x, n)
     while (pow(gradient_vector[0] + gradient_vector[1], 2) > e):
         x = [x[0] - h * gradient_vector[0], x[1] - h * gradient_vector[1]]
